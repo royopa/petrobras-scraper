@@ -13,20 +13,21 @@ if __name__ == '__main__':
     path_file_base = 'bases/'+name_file_base
     # começa a fazer os cálculos para o arquivo base
     df = pd.read_csv(path_file_base, sep=';')
-    # we use .str to replace and then convert to float
+    # converte os dados do dataframe
     df['data'] = pd.to_datetime(df['Data'], format='%d/%m/%Y', errors='ignore')
-    df['indice_gasolina'] = (df['indice_gasolina'].shift(1) * df.Gasolina / 100) + df['indice_gasolina'].shift(1)
-    df['indice_diesel'] = (df['indice_diesel'].shift(1) * df.Diesel / 100) + df['indice_diesel'].shift(1)
+    del df['Data']
 
-    start_date = datetime.datetime(2017, 1, 1)
-    all_days = pd.date_range(start_date, datetime.datetime.now(), freq='D')
-    df.index = pd.DatetimeIndex(df.Data)
-    df = df.reindex(all_days, fill_value=0)
+    count_nan = sum(pd.isnull(df['indice_gasolina']))
+    while count_nan > 0:
+        df['indice_gasolina'] = df['indice_gasolina'].fillna(value=(df['indice_gasolina'].shift(1) * df.Gasolina / 100) + df['indice_gasolina'].shift(1))
+        df['indice_diesel'] = df['indice_gasolina'].fillna(value=(df['indice_diesel'].shift(1) * df.Diesel / 100) + df['indice_diesel'].shift(1))    
+        count_nan -= 1
+
+    saida_path_file_base = 'bases/saida_'+name_file_base
+    df.to_csv(saida_path_file_base, sep='\t', encoding='utf-8')
+    quit()
 
     writer = pd.ExcelWriter('test.xlsx', engine='xlsxwriter')
     df.to_excel(writer, sheet_name='Sheet1')
     # Close the Pandas Excel writer and output the Excel file.
     writer.save()
-    
-    quit()
-

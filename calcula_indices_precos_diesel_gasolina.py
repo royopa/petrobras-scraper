@@ -39,11 +39,15 @@ def get_pandas_dataframe_base(path_file_base):
 
 def filtra_df_por_data(df, start_date, end_date):
     mask = (df['Data'] >= start_date) & (df['Data'] <= end_date)
+<<<<<<< HEAD
     df = df.loc[mask]
     all_days = pd.date_range(start_date, end_date, freq='D')
     df.index = pd.DatetimeIndex(df.Data)
     return df.reindex(all_days, fill_value=0)
 
+=======
+    return (df.loc[mask])
+>>>>>>> 2f10f8c170e9b714b82a9ae2c3288b934dca27ba
 
 def calcula_medias_detalhe(data_referencia):
     # calcula o último mês de acordo com a data de referência
@@ -62,6 +66,7 @@ def calcula_medias_detalhe(data_referencia):
         )[1]
     )
 
+<<<<<<< HEAD
     print('DT REF:', data_referencia)
     # data frame com a base de dados
     df = get_pandas_dataframe_base(path_file_base)
@@ -99,6 +104,13 @@ def calcula_medias_detalhe(data_referencia):
 
 
 def calcula_medias(data_referencia):
+=======
+if __name__ == '__main__':
+    # verifica a última data disponível na base 
+    path_file_base = 'ajustes_precos_diesel_e_gasolina_base.csv'
+
+    data_referencia = datetime.datetime(2018, 1, 1)
+>>>>>>> 2f10f8c170e9b714b82a9ae2c3288b934dca27ba
     # calcula o último mês de acordo com a data de referência
     last_month = data_referencia - dateutil.relativedelta.relativedelta(months=1)
     # IGP 10 - do dia 11 mês anterior ao dia 10 do mês de referência
@@ -118,28 +130,44 @@ def calcula_medias(data_referencia):
     print('DT REF:', data_referencia)
     # data frame com a base de dados
     df = get_pandas_dataframe_base(path_file_base)
+<<<<<<< HEAD
     print("\n\n")
+=======
+>>>>>>> 2f10f8c170e9b714b82a9ae2c3288b934dca27ba
 
     print("-----------------------------------------------")
     print('IGP-10:', data_ini_igp_10, data_fim_igp_10)
     print("-----------------------------------------------")
     df_igp_10 = filtra_df_por_data(df, data_ini_igp_10, data_fim_igp_10)
+<<<<<<< HEAD
     print('Gasolina média', df_igp_10.Gasolina.mean())
     print('Diesel média', df_igp_10.Diesel.mean())
     print("\n\n")
+=======
+    print(df_igp_10)
+    print(df_igp_10.Gasolina.mean())
+    print(df_igp_10.Diesel.mean())
+>>>>>>> 2f10f8c170e9b714b82a9ae2c3288b934dca27ba
 
     print("-----------------------------------------------")
     print('IGP-M: ', data_ini_igp_m, data_fim_igp_m)
     print("-----------------------------------------------")
     df_igp_m = filtra_df_por_data(df, data_ini_igp_m, data_fim_igp_m)
+<<<<<<< HEAD
     print('Gasolina média', df_igp_m.Gasolina.mean())
     print('Diesel média', df_igp_m.Diesel.mean())
     print("\n\n")
+=======
+    print(df_igp_m)
+    print(df_igp_m.Gasolina.mean())
+    print(df_igp_m.Diesel.mean())
+>>>>>>> 2f10f8c170e9b714b82a9ae2c3288b934dca27ba
 
     print("-----------------------------------------------")
     print('IGP-DI:', data_ini_igp_di, data_fim_igp_di)
     print("-----------------------------------------------")
     df_igp_di = filtra_df_por_data(df, data_ini_igp_di, data_fim_igp_di)
+<<<<<<< HEAD
     print('Gasolina média', df_igp_di.Gasolina.mean())
     print('Diesel média', df_igp_di.Diesel.mean())
     print("\n\n")
@@ -157,3 +185,8 @@ if __name__ == '__main__':
     data_referencia = datetime.datetime(2018, 1, 1)
     calcula_medias(data_referencia)
 
+=======
+    print(df_igp_di)
+    print(df_igp_di.Gasolina.mean())
+    print(df_igp_di.Diesel.mean())
+>>>>>>> 2f10f8c170e9b714b82a9ae2c3288b934dca27ba

@@ -9,7 +9,6 @@ __pycahe__
 .DS_Store
 debug.log
 geckodriver.log
-downloads
 preco_diario_petrobras.xlsx
-Reajustes_DivulgadosPetro_IPA
-downloads/*
+Reajustes_DivulgadosPetro_IPA.xlsx
+downloads/
