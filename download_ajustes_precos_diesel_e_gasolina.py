@@ -5,6 +5,7 @@ import time
 import tabula
 import csv
 import datetime
+import os
 
 def get_ultima_data_disponivel_base(path_file_base):
     # verifica a última data disponívl na base
@@ -24,7 +25,8 @@ def download_file(url, path_file):
 
 if __name__ == '__main__':
     # verifica a última data disponível na base 
-    path_file_base = 'ajustes_precos_diesel_e_gasolina_base.csv'
+    name_file_base = 'ajustes_precos_diesel_e_gasolina_base.csv'
+    path_file_base = 'bases/'+name_file_base
     ultima_data_base = get_ultima_data_disponivel_base(path_file_base)
     print('Última data base disponível:', ultima_data_base)
 
@@ -32,7 +34,9 @@ if __name__ == '__main__':
     url = 'http://www.petrobras.com.br/lumis/api/rest/pricegraph/report'
     name_file = 'ajustes_precos_diesel_e_gasolina_'+time.strftime("%d.%m.%Y")+'.pdf'
     path_file = 'downloads/'+name_file
-    download_file(url, path_file)
+    
+    if not os.path.exists(path_file):
+        download_file(url, path_file)    
 
     # convert PDF into CSV
     path_file_csv = path_file+'.csv'
@@ -57,3 +61,4 @@ if __name__ == '__main__':
                 print('Dado inserido no arquivo base:', row_inserted)
 
     print("Arquivo baixado com sucesso e está disponível na pasta downloads:", name_file)
+    quit()

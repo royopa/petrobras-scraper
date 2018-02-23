@@ -17,27 +17,28 @@ def get_ultima_data_disponivel_base(path_file_base):
             if data == 'Data':
                 return None
             data = row[0].split(';')[0]
-            return datetime.datetime.strptime(data, '%d/%m/%Y').date()
+            return datetime.datetime.strptime(data[0:10], '%d/%m/%Y').date()
+            # return datetime.datetime.strptime(data[0:10], '%Y-%m-%d').date()
 
 
 if __name__ == '__main__':
     # verifica a última data disponível na base 
-    path_file_base = 'ajustes_precos_diesel_e_gasolina_base.csv'
+    # name_file_base = 'ajustes_precos_diesel_e_gasolina_base.csv'
+    name_file_base = 'indices_diesel_e_gasolina_base.csv'
+    path_file_base = 'bases/'+name_file_base
     ultima_data_base = get_ultima_data_disponivel_base(path_file_base)
     print('Última data base disponível:', ultima_data_base)
-    if (ultima_data_base is None):
-        ultima_data_base = datetime.date(1900, 1, 1)
 
     # pega a base de preços para geração dos indíces
-    path_file_base_precos = 'precos_medios_diesel_e_gasolina_base.csv'
+    name_file_base_precos = 'precos_medios_diesel_e_gasolina_base.csv'
+    path_file_base_precos = 'bases/'+name_file_base_precos
     df = pd.read_csv(path_file_base_precos, sep=';')
-    # we use .str to replace and then convert to float
-    df['Diesel'] = df.Diesel.str.replace(',', '.').astype(float)
-    df['Gasolina'] = df.Gasolina.str.replace(',', '.').astype(float)
-    
-    # printa os n elementos do dataframe df.head(n)
-    #print(df['Diesel'])
 
+    start_date = datetime.datetime(2017, 1, 1)
+    all_days = pd.date_range(start_date, datetime.datetime.now(), freq='D')
+    df.index = pd.DatetimeIndex(df.Data)
+    #df = df.reindex(all_days, fill_value=0)
+    
     # converte um dataframe para numpy array
     np_base_precos = df.values
     # pega todas as linhas da segunda coluna do dataframe
@@ -46,31 +47,83 @@ if __name__ == '__main__':
     np_precos_gasolina = np_base_precos[:, 2]
 
     # calcula os retornos com base nos preços
-    df['ret_diesel'] = ((df.Diesel / df.Diesel.shift(1))-1)*100
+    df['preco_diesel'] = df.Diesel.str.replace(',', '.').astype(float)
+    df['preco_gasolina'] = df.Gasolina.str.replace(',', '.').astype(float)
+    
+    df['ret_diesel'] = ((df.preco_diesel / df.preco_diesel.shift(1))-1)*100
     df['ret_diesel'] = df['ret_diesel'].round(1)
     
-    df['ret_gasolina'] = ((df.Gasolina / df.Gasolina.shift(1))-1)*100
+    df['ret_gasolina'] = ((df.preco_gasolina / df.preco_gasolina.shift(1))-1)*100
     df['ret_gasolina'] = df['ret_gasolina'].round(1)
-    
+
+    '''
+    # calcula os retornos com base nos preços
+    df['ret_perc_diesel'] = ((df.Diesel / df.Diesel.shift(1))-1)*100
+    df['ret_perc_diesel'] = df['ret_perc_diesel'].round(4)
+    df['ret_val_diesel'] = (df.Diesel - df.Diesel.shift(1))
+    df['ret_val_calculado_diesel'] = ((df.Diesel * df.ret_perc_diesel)/100)
+    df['ret_log_diesel'] = (np.log(df.Diesel) - np.log(df.Diesel.shift(1)))
+    df['val_calculado_diesel'] = (df.Diesel.shift(-1) - (df.ret_val_calculado_diesel.shift(-1)))
+    df['val_calculado_diesel'] = df['val_calculado_diesel'].round(4)
+
+
+    df['ret_perc_gasolina'] = ((df.Gasolina / df.Gasolina.shift(1))-1)*100
+    df['ret_perc_gasolina'] = df['ret_perc_gasolina'].round(4)
+    # calcula o valor da diferenca em valor em relação ao dia anterior
+    df['ret_val_gasolina'] = (df.Gasolina - df.Gasolina.shift(1))
+    # calcula o valor da diferenca em valor em relação ao dia anterior
+    # usando o retorno percentual
+    df['ret_val_calculado_gasolina'] = ((df.Gasolina - df.ret_perc_gasolina)/100)
+    # calcula os retornos logarítmos
+    df['ret_log_gasolina'] = (np.log(df.Gasolina) - np.log(df.Gasolina.shift(1)))
+    # calcula o preço do dia, baseado no praço do dia posterior e retorno do preço posterior
+    df['val_calculado_gasolina'] = (df.Gasolina.shift(-1) - (df.ret_val_calculado_gasolina.shift(-1)))
+
+    writer = pd.ExcelWriter('test.xlsx', engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
+    # Close the Pandas Excel writer and output the Excel file.
+    writer.save()
+    '''
+
     rows_to_insert = []
 
     for index, row in df.iterrows():
-        if (datetime.datetime.strptime(row['Data'], '%d/%m/%Y').date() <= ultima_data_base):
+        # pula os registros que já estão na base
+        data = datetime.datetime.strptime(row['Data'], '%d/%m/%Y').date()
+        if (data <= ultima_data_base):
             continue
 
         row_inserted = {
             'Data': row['Data'],
-            'Gasolina': str(row['ret_gasolina']).replace('.', ','),
-            'Diesel': str(row['ret_diesel']).replace('.', ',')
+            'Gasolina': row['ret_gasolina'],
+            'Diesel': row['ret_diesel'],
+            'indice_gasolina': '',#row['indice_gasolina'],
+            'indice_diesel': '',#row['indice_diesel']
         }
         rows_to_insert.append(row_inserted)
-        
-    print(rows_to_insert)
 
     # faz o append no csv
     with open(path_file_base, 'a', newline='') as baseFile:
-        fieldnames = ['Data', 'Gasolina', 'Diesel']
+        fieldnames = ['Data', 'Gasolina', 'Diesel', 'indice_gasolina', 'indice_diesel']
         writer = csv.DictWriter(baseFile, fieldnames=fieldnames, delimiter=';')
         for row_inserted in rows_to_insert:
             writer.writerow(row_inserted)
-            print('Dado inserido no arquivo base:', row_inserted)
+            print('Dado inserido no arquivo base:', row_inserted)    
+
+    print(rows_to_insert)
+
+    # depois de inserir os dados é necessário recalcular o valor base 100
+    df = pd.read_csv(path_file_base, sep=';')
+    df['data'] = pd.to_datetime(df['Data'], format='%d/%m/%Y', errors='ignore')
+    df['indice_gasolina'] = (df['indice_gasolina'].shift(1) * df.Gasolina / 100) + df['indice_gasolina'].shift(1)
+    df['indice_diesel'] = (df['indice_diesel'].shift(1) * df.Diesel / 100) + df['indice_diesel'].shift(1)
+
+    start_date = datetime.datetime(2017, 1, 1)
+    all_days = pd.date_range(start_date, datetime.datetime.now(), freq='D')
+    df.index = pd.DatetimeIndex(df.Data)
+    df = df.reindex(all_days, fill_value=0)
+
+    writer = pd.ExcelWriter(path_file_base+'.xlsx', engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
+    # Close the Pandas Excel writer and output the Excel file.
+    writer.save()        
