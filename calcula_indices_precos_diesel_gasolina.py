@@ -1,6 +1,5 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-import requests
 import time
 import csv
 import datetime
@@ -34,27 +33,20 @@ def get_pandas_dataframe_base(path_file_base):
     # we use .str to replace and then convert to float
     df['Diesel'] = df.Diesel.str.replace(',', '.').astype(float)
     df['Gasolina'] = df.Gasolina.str.replace(',', '.').astype(float)
-    df['Data'] = pd.to_datetime(df['Data'])
+    df['Data'] = pd.to_datetime(df['Data'], format='%d/%m/%Y', errors='ignore')
     return df
 
 
 def filtra_df_por_data(df, start_date, end_date):
-    >>> d = datetime.date(2011,01,01)
->>> datetime.datetime.utcfromtimestamp(calendar.timegm(d.timetuple()))
-
-    in_range_df = df[df["Data"].isin(pd.date_range(start_date, end_date))]
-    return in_range_df
+    mask = (df['Data'] >= start_date) & (df['Data'] <= end_date)
+    return (df.loc[mask])
 
 
 if __name__ == '__main__':
     # verifica a última data disponível na base 
     path_file_base = 'ajustes_precos_diesel_e_gasolina_base.csv'
-    ultima_data_base = get_ultima_data_disponivel_base(path_file_base)
 
-    if (ultima_data_base is None):
-        ultima_data_base = datetime.datetime.date(1900, 1, 1)
-
-    data_referencia = datetime.datetime(2017, 12, 20)
+    data_referencia = datetime.datetime(2018, 1, 1)
     # calcula o último mês de acordo com a data de referência
     last_month = data_referencia - dateutil.relativedelta.relativedelta(months=1)
     # IGP 10 - do dia 11 mês anterior ao dia 10 do mês de referência
@@ -71,23 +63,24 @@ if __name__ == '__main__':
         )[1]
     )
 
-    print('BASE  :', ultima_data_base)
     print('DT REF:', data_referencia)
-
     # data frame com a base de dados
     df = get_pandas_dataframe_base(path_file_base)
-    
-    print(type(data_fim_igp_10))
-    print(type(data_ini_igp_10))
 
     print('IGP-10:', data_ini_igp_10, data_fim_igp_10)
     df_igp_10 = filtra_df_por_data(df, data_ini_igp_10, data_fim_igp_10)
-    print(df_igp_10.values)
+    print(df_igp_10)
+    print(df_igp_10.Gasolina.mean())
+    print(df_igp_10.Diesel.mean())
 
     print('IGP-M: ', data_ini_igp_m, data_fim_igp_m)
     df_igp_m = filtra_df_por_data(df, data_ini_igp_m, data_fim_igp_m)
     print(df_igp_m)
+    print(df_igp_m.Gasolina.mean())
+    print(df_igp_m.Diesel.mean())
 
     print('IGP-DI:', data_ini_igp_di, data_fim_igp_di)
     df_igp_di = filtra_df_por_data(df, data_ini_igp_di, data_fim_igp_di)
     print(df_igp_di)
+    print(df_igp_di.Gasolina.mean())
+    print(df_igp_di.Diesel.mean())

@@ -55,8 +55,8 @@ if __name__ == '__main__':
 
             print(data, diesel, gasolina)
 
-            #if (datetime.datetime.strptime(data, '%d/%m/%Y').date() <= ultima_data_base):
-                #continue
+            if (datetime.datetime.strptime(data, '%d/%m/%Y').date() <= ultima_data_base):
+                continue
 
             # faz o append no csv
             with open(path_file_base, 'a', newline='') as baseFile:
