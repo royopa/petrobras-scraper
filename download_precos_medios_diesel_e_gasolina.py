@@ -49,6 +49,8 @@ if __name__ == '__main__':
     # convert PDF into CSV
     path_file_csv = path_file+'.csv'
     tabula.convert_into(path_file, path_file_csv, output_format="csv")
+    
+    print("Arquivo baixado com sucesso e está disponível na pasta downloads:", name_file)
 
     with open(path_file_csv) as csvfile:
         reader = csv.DictReader(csvfile)
@@ -69,6 +71,4 @@ if __name__ == '__main__':
                 row_inserted = {'Data': data, 'Gasolina': gasolina, 'Diesel': diesel}
                 writer.writerow(row_inserted)
                 print('Dado inserido no arquivo base:', row_inserted)
-
-    print("Arquivo baixado com sucesso e está disponível na pasta downloads:", name_file)
-    quit()
+        print("Base de dados atualizada com sucesso:", path_file_base)

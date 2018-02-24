@@ -11,4 +11,6 @@ debug.log
 geckodriver.log
 preco_diario_petrobras.xlsx
 Reajustes_DivulgadosPetro_IPA.xlsx
-downloads/
+.vscode
+.ipynb_checkpoints
+bases/.~*
