@@ -1,0 +1,24 @@
+[[source]]
+
+verify_ssl = true
+url = "https://pypi.python.org/simple"
+name = "pypi"
+
+
+[packages]
+
+requests = "*"
+numpy = "*"
+pandas = "*"
+tabula-py = "*"
+tqdm = "*"
+xlsxwriter = "*"
+
+
+[requires]
+
+python_version = "3.5"
+
+
+[dev-packages]
+

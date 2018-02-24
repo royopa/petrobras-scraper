@@ -41,16 +41,22 @@ if __name__ == '__main__':
         count_nan -= 1
 
     df['data'] = df.index
+    del df['data']
 
     df['Gasolina'] = df['Gasolina'].fillna(value=0)
     df['Diesel'] = df['Diesel'].fillna(value=0)   
 
-    print(df)
+    df.index.name = 'data'
 
+    print("Último registro do arquivo base", "\n", df.tail(1))
+
+    # Salva o DataFrame em csv.
     saida_path_file_base = 'bases/saida_'+name_file_base
-    df.to_csv(saida_path_file_base, sep='\t', encoding='utf-8')
-
-    writer = pd.ExcelWriter('test.xlsx', engine='xlsxwriter')
-    df.to_excel(writer, sheet_name='Sheet1')
+    df.to_csv(saida_path_file_base, sep=';', encoding='utf-8')
+    print("Arquivo base csv salvo com sucesso:", "\n", saida_path_file_base)
     # Close the Pandas Excel writer and output the Excel file.
+    saida_xlsx_file_base = 'bases/saida_xlsx_'+name_file_base+'.xlsx'
+    writer = pd.ExcelWriter(saida_xlsx_file_base, engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
     writer.save()
+    print("Arquivo base csv salvo com sucesso", "\n", saida_xlsx_file_base)
