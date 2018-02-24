@@ -7,9 +7,7 @@ O Petrobras scraper é um projeto para captura de dados do site da Petrobras com
 
 ### Relatório com variação de preços
 
-A Petrobras apresentava o ajuste de preços com a variação em percentual em relação a data divulgada anteriormente, através [deste relatório PDF](http://www.petrobras.com.br/lumis/api/rest/pricegraph/report). Este relatório não é mais atualizado, sendo o dia 17/02/2018 a última data disponível.
-
-Um trecho [relatório com as variações de preço](http://www.petrobras.com.br/lumis/api/rest/pricegraph/report) pode ser visto abaixo:
+A Petrobras apresentava o ajuste de preços com a variação em percentual em relação a data divulgada anteriormente, através [deste relatório PDF](http://www.petrobras.com.br/lumis/api/rest/pricegraph/report). Este relatório não é mais atualizado e a última data disponível é o dia 17/02/2018. Um trecho deste relatório pode ser visualizado na imagem abaixo:
 
 ![relatorio_ajuste_precos_example.png](https://raw.githubusercontent.com/royopa/petrobras-scraper/master/images/relatorio_ajuste_precos_example.png)
 
@@ -17,9 +15,7 @@ O programa que faz o download e converte os dados baixados para CSV é o [downlo
 
 ### Relatório com preços médios
 
-A partir de 08/02/2018 a Petrobras passou a disponibilizar a informação de preços médios em reais por litro, através [deste relatório PDF](http://www.petrobras.com.br/lumis/api/rest/pricegraphnovo/report?n=4)
-
-Um trecho do [relatório dos preços médios de diesel e gasolina](http://www.petrobras.com.br/lumis/api/rest/pricegraph/report) pode ser visto abaixo:
+A partir de 08/02/2018 a Petrobras passou a disponibilizar a informação de preços médios em reais, e não mais em percentual, através [deste relatório PDF](http://www.petrobras.com.br/lumis/api/rest/pricegraphnovo/report?n=4). Um trecho deste relatório pode ser visto abaixo:
 
 ![relatorio_preco_medio_example.png](https://raw.githubusercontent.com/royopa/petrobras-scraper/master/images/relatorio_preco_medio_example.png)
 
@@ -27,12 +23,13 @@ O programa que faz o download e converte os dados baixados para CSV é o [downlo
 
 ## Relatórios apenas no formato PDF
 
-As informações disponibilizadas estão apenas no formato PDF. Entrei em contato com a Petrobras solicitando que o relatório fosse disponibilizado em outro formato (como json, xml ou txt), mas eles responderam (Protocolo Ouvidoria Geral Nº 00914/2018
-) que existia apenas o formato PDF disponível e não me deram nenhum indicativo sobre a possibilidade de disponibilização da informação em outros formatos no futuro.
+As informações disponibilizadas no site da petrobras estão apenas no formato PDF. Entrei em contato com eles (Protocolo Ouvidoria Geral Nº 00914/2018) solicitando que o relatório fosse disponibilizado em outro formato (json, xml ou txt), mas eles responderam que existia apenas o formato PDF disponível e não me deram nenhum indicativo sobre a possibilidade de disponibilização da informação em outros formatos no futuro.
 
-Diante disso, após o download do PDF foi necessário a criação de um passo para extrair os dados da tabela em PDF, tarefa que foi realizada pela biblioteca [tabula-py](https://github.com/chezou/tabula-py). O [tabula-py]((https://github.com/chezou/tabula-py)) é um wrapper do [tabula-java](https://github.com/tabulapdf/tabula-java), que extrai uma tabela de um pdf para um [DataFrame pandas](https://www.datacamp.com/community/tutorials/pandas-tutorial-dataframe-python).
+Diante disso, foi necessário a criação de um passo para extrair os dados da tabela em PDF, tarefa que foi realizada pela biblioteca [tabula-py](https://github.com/chezou/tabula-py). O [tabula-py]((https://github.com/chezou/tabula-py)) é um wrapper do [tabula-java](https://github.com/tabulapdf/tabula-java), que extrai uma tabela de um arquivo PDF para um [DataFrame pandas](https://www.datacamp.com/community/tutorials/pandas-tutorial-dataframe-python).
 
 ## Instalar dependências do projeto
+
+Para instalar as dependências do projeto utilize o comando abaixo:
 
 ```sh
 > pip install -r requirements.txt
@@ -58,14 +55,14 @@ A partir da base de preços médios diários atualizada no passo anterior, foi c
 
 #### 3º passo - Calcular o preço na base 100 com dados a partir de 2017
 
-Visto que os dados de preços da Petrobras foram disponibilizados apenas a partir de fevereiro/2018 e anteriormente já existia na base de dados preços utilizando base 100 tendo como início 01/01/2017, foi criado o programa [calcula_preco_base_100.py](https://github.com/royopa/petrobras-scraper/blob/master/calcula_preco_base_100.py) para fazer esse cálculo e gerar os arquivos com a base final, contendo a variação diária e os preços usando base 100 a partir de 01/01/2017. A execução desse programa gera dois arquivos de saída com o mesmo conteúdo: [um em csv](https://github.com/royopa/petrobras-scraper/blob/master/bases/saida_indices_diesel_e_gasolina_base.csv) e [outro no formato excel xlsx](https://github.com/royopa/petrobras-scraper/blob/master/bases/saida_xlsx_indices_diesel_e_gasolina_base.csv.xlsx)
+Visto que os dados de preços da Petrobras foram disponibilizados apenas a partir de fevereiro/2018 e anteriormente já existia na base de dados preços utilizando base 100 tendo como início 01/01/2017, foi criado o programa [calcula_preco_base_100.py](https://github.com/royopa/petrobras-scraper/blob/master/calcula_preco_base_100.py) para fazer esse cálculo e gerar a base final utilizada para análise
 
-Os arquivo de base terão o seguinte formato e poderão ser usados para análise:
+A base final contém a variação diária e os preços usando base 100 a partir de 01/01/2017. A execução desse programa gera dois arquivos de saída com o mesmo conteúdo: [um em csv](https://github.com/royopa/petrobras-scraper/blob/master/bases/saida_indices_diesel_e_gasolina_base.csv) e [outro no formato excel xlsx](https://github.com/royopa/petrobras-scraper/blob/master/bases/saida_xlsx_indices_diesel_e_gasolina_base.csv.xlsx). A base final tem o formato abaixo:
 
 ![base_final.png](https://raw.githubusercontent.com/royopa/petrobras-scraper/master/images/base_final.png)
 
 
-#### Atalho para executar os passos de uma única vez
+### Atalho para executar os passos de uma única vez
 
 Para executar a atualização das bases de dados de uma única vez, basta executar os 3 passos seguidos. Para facilitar esse processo, apenas execute o script start.bat/start.sh, de acordo com o seu sistema operacional:
 
@@ -81,7 +78,7 @@ Para executar a atualização das bases de dados de uma única vez, basta execut
 
 ## Análise dos dados
 
-Caso você deseja abrir as bases de dados como um dataframe [pandas](https://pandas.pydata.org/) utilize a [função read_csv()](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html), conforme exemplo abaixo:
+Caso você deseja abrir as bases de dados como um dataframe [pandas](https://pandas.pydata.org/), utilize a [função read_csv()](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html), conforme exemplo abaixo:
 
 ```python
 import pandas as pd
@@ -92,5 +89,3 @@ df = pd.read_csv(path_file_base, sep=';')
 print(df.tail())
 
 ```
-
-A partir do dataframe carregado você já pode executar todas as ações para análise.
