@@ -23,9 +23,32 @@ if __name__ == '__main__':
         df['indice_diesel'] = df['indice_gasolina'].fillna(value=(df['indice_diesel'].shift(1) * df.Diesel / 100) + df['indice_diesel'].shift(1))    
         count_nan -= 1
 
+    df['indice_gasolina'] = df['indice_gasolina'].round(2)
+    df['indice_diesel'] = df['indice_gasolina'].round(2)
+
+    start_date = datetime.datetime(2017, 1, 1)
+    all_days = pd.date_range(start_date, df['data'].max(), freq='D')
+    df.index = pd.DatetimeIndex(df.data)
+    df = df.reindex(all_days, fill_value=0)
+
+    df[df['indice_gasolina'].eq(0)] = np.nan
+    df[df['indice_diesel'].eq(0)] = np.nan
+
+    count_nan = sum(pd.isnull(df['indice_gasolina']))
+    while count_nan > 0:
+        df['indice_gasolina'] = df['indice_gasolina'].fillna(value=(df['indice_gasolina'].shift(1)))
+        df['indice_diesel'] = df['indice_gasolina'].fillna(value=(df['indice_diesel'].shift(1)))
+        count_nan -= 1
+
+    df['data'] = df.index
+
+    df['Gasolina'] = df['Gasolina'].fillna(value=0)
+    df['Diesel'] = df['Diesel'].fillna(value=0)   
+
+    print(df)
+
     saida_path_file_base = 'bases/saida_'+name_file_base
     df.to_csv(saida_path_file_base, sep='\t', encoding='utf-8')
-    quit()
 
     writer = pd.ExcelWriter('test.xlsx', engine='xlsxwriter')
     df.to_excel(writer, sheet_name='Sheet1')

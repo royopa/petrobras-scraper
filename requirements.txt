@@ -3,3 +3,4 @@ numpy
 pandas
 tabula-py
 tqdm
+xlsxwriter
