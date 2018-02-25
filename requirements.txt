@@ -4,3 +4,5 @@ pandas
 tabula-py
 tqdm
 xlsxwriter
+tablib
+flask

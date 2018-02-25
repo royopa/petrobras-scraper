@@ -32,7 +32,16 @@ Diante disso, foi necessário a criação de um passo para extrair os dados da t
 Para instalar as dependências do projeto utilize o comando abaixo:
 
 ```sh
+> cd petrobras-scraper
 > pip install -r requirements.txt
+```
+
+ou caso vocë utilize o pipenv, utilize o comando abaixo e ative o virtualenv:
+
+```sh
+> cd petrobras-scraper
+> pipenv install
+> pipenv shell
 ```
 
 ## Utilizando os programas
@@ -67,11 +76,13 @@ A base final contém a variação diária e os preços usando base 100 a partir 
 Para executar a atualização das bases de dados de uma única vez, basta executar os 3 passos seguidos. Para facilitar esse processo, apenas execute o script start.bat/start.sh, de acordo com o seu sistema operacional:
 
 ##### No Linux
+
 ```sh
 > ./start.sh
 ```
 
 ##### No Windows
+
 ```sh
 > ./start.bat
 ```
@@ -89,3 +100,13 @@ df = pd.read_csv(path_file_base, sep=';')
 print(df.tail())
 
 ```
+
+## Formato JSON
+
+Para disponibilização dos dados no formato json, foi desenvolvido um script em Flask que lê os arquivos csv com a base de preços e a base de índices e disponibiliza no formato json. Para executar, execute o comando abaixo:
+
+```sh
+> python ./flask-app.py
+```
+
+Então será iniciada uma aplicação Flask na porta 5000, que pode ser acessada no browser com os [preços do diesel e gasolina](http://localhost:5000/) e [com os índices de acordo com os preços disponibilizados](http://localhost:5000/indices).

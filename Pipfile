@@ -13,6 +13,8 @@ pandas = "*"
 tabula-py = "*"
 tqdm = "*"
 xlsxwriter = "*"
+flask = "*"
+tablib = "*"
 
 
 [requires]
