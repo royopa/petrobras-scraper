@@ -15,6 +15,7 @@ tqdm = "*"
 xlsxwriter = "*"
 flask = "*"
 tablib = "*"
+pylint = "*"
 
 
 [requires]

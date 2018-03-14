@@ -5,14 +5,21 @@ import pandas as pd
 import numpy as np
 import dateutil.relativedelta
 import calendar
+from datetime import date
+from dateutil.rrule import rrule
+from dateutil.rrule import MONTHLY
 
-name_file_base = 'saida_indices_diesel_e_gasolina_base.csv'
-path_file_base = 'bases/'+name_file_base
-df = pd.read_csv(path_file_base, sep=';')
+
+def get_pandas_dataframe_base(path_file_base):
+    df = pd.read_csv(path_file_base, sep=';')
+    df['data'] = pd.to_datetime(df['data'], format='%Y-%m-%d', errors='ignore')
+    return df
+
 
 def filtra_df_por_data(df, start_date, end_date):
-    mask = (df['Data'] >= start_date) & (df['Data'] <= end_date)
+    mask = (df['data'] >= start_date) & (df['data'] <= end_date)
     return (df.loc[mask])
+
 
 def get_datas_by_indice(data_referencia, indice = ""):
     # calcula o último mês de acordo com a data de referência
@@ -50,12 +57,23 @@ def get_datas_by_indice(data_referencia, indice = ""):
     
     return False
 
-data_referencia = datetime.datetime(2017, 12, 1)
-get_datas_by_indice(data_referencia, indice = "10")
-get_datas_by_indice(data_referencia, indice = "m")
-get_datas_by_indice(data_referencia, indice = "di")
 
-for indice in ['10', 'm', 'di']:
-    print(get_datas_by_indice(data_referencia, indice=indice))
-    print(get_datas_by_indice(data_referencia, indice=indice)['start_date'])
-    print(get_datas_by_indice(data_referencia, indice=indice)['end_date'])
+if __name__ == '__main__':
+    name_file_base = 'saida_indices_diesel_e_gasolina_base.csv'
+    path_file_base = 'bases/'+name_file_base
+    df = get_pandas_dataframe_base(path_file_base)
+
+    for data_referencia in rrule(MONTHLY, dtstart=date(2017, 3, 1), until=date.today()):
+        get_datas_by_indice(data_referencia, indice = "10")
+        get_datas_by_indice(data_referencia, indice = "m")
+        get_datas_by_indice(data_referencia, indice = "di")
+
+        for indice in ['10', 'm', 'di']:
+            print(indice)
+            print(get_datas_by_indice(data_referencia, indice=indice))
+            
+            start_date = get_datas_by_indice(data_referencia, indice=indice)['start_date']
+            end_date = get_datas_by_indice(data_referencia, indice=indice)['end_date']
+
+            df_filtered = filtra_df_por_data(df, start_date, end_date)
+            print(df_filtered)
