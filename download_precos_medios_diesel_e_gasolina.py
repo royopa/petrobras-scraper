@@ -7,6 +7,7 @@ import csv
 import datetime
 from tqdm import tqdm
 import os
+import wget
 
 
 def get_ultima_data_disponivel_base(path_file_base):
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     path_file = 'downloads/'+name_file
 
     if not os.path.exists(path_file):
-        download_file(url, path_file)
+        wget.download(url, path_file)
 
     # convert PDF into CSV
     path_file_csv = path_file+'.csv'
