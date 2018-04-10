@@ -1,5 +1,5 @@
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-  echo -e "Starting to update gh-pages\n"
+  echo -e "Starting to update bases\n"
 
   #copy data we're interested in to other place
   cp -R bases $HOME/bases
@@ -19,7 +19,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   #add, commit and push files
   git add -f .
   git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed to master"
-  git push -fq origin gh-pages > /dev/null
+  git push -fq origin master > /dev/null
 
   echo -e "Done magic with bases\n"
 fi
