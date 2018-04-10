@@ -1,23 +1,24 @@
 language: python
 python:
-  - "3.6"
-
+- '3.6'
 install:
-  - "pip install --upgrade pip"
-  - "pip install -r ./requirements.txt"
-  - 'pipenv install --deploy --system --dev'
-
+- pip install --upgrade pip
+- pip install -r ./requirements.txt
+- pipenv install --deploy --system --dev
 script:
-  - "./start.sh"
-
+- "./start.sh"
 notifications:
   email:
     recipients:
-      - royopa@gmail.com
-    on_success: never # default: change
-    on_failure: always # default: always
-
+    - royopa@gmail.com
+    on_success: never
+    on_failure: always
 addons:
   apt:
     packages:
-      - oracle-java8-set-default
+    - oracle-java8-set-default
+env:
+  global:
+    secure: W3XOzBMv3d5UzEB7QqM74VVxhVnfUwx+dGN3L+5bSF7gKWGv/+nS/Hy8u5hLxGhVNTAJWDVjwmIZESM6VEmZQ10e1jTJSp0TYHNw3ngefdCCek14wZghL5ezlcjva/6bCZop/QtofE0r5WoceZ9tQ0SiQARSxWAlGNs+4Xz3xMpR0tam+SIMlXfjcYuL671cDePF1phLb8vUY6Qhcv9iormzQYj1UXJGukQH4UMh5ObgMc4C+bGNWo8BjtnJzUQr/8nGve4phn5HarIS+QVpxQ0VtDQZmjM97tx02q3Cguy8Hf4kdD6Jlza4jQ+T3k5p7FeCb7UCp2TLhHLEnIZeHimKRLtLCT2cVp6yA2r3P9i3TLfK5TIjI5rduvVy8B05MLZUn3yeoO3V6Oz9Ao6KxCnvrM1/Ny8LvpJyIzhAdlCdZhqHHuFdnKlVJaFIb6pm7MJKWxv4p/f/oqR7qU7tr5ZAQ31F/07S7bF6r9n2mbiW1vDLkJ7vh7UMu1i9DgyZ3l965XTXtBbq2QeqNqoIR4UI1Eushg92GziuL+rrSNw+5EgVF5XiyxHQm90JVZEh+UcedlVV6Tcp5Yw0k1tu/JakKK7Wc0fbpore6e/VerF9YNxBiDhRufkFMS5sIyOTiqig99K1zR45kNMhDH828v9bNJ9aHWfmY7COyCChFog=
+
+after_success: ./update-gh-pages.sh
