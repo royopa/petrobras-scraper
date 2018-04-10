@@ -16,3 +16,8 @@ notifications:
       - royopa@gmail.com
     on_success: never # default: change
     on_failure: always # default: always
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-set-default
