@@ -1,3 +1,4 @@
+pipenv
 requests
 numpy
 pandas
