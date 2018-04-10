@@ -40,6 +40,7 @@ if __name__ == '__main__':
         ultima_data_base = datetime.date(1900, 1, 1)
 
     # faz o download do PDF do site da petrobrás
+    # http://www.petrobras.com.br/lumis/api/rest/pricegraphnovo/report?n=4
     url = 'http://www.petrobras.com.br/lumis/api/rest/pricegraphnovo/report?n=4'
     name_file = 'precos_medios_diesel_e_gasolina_'+time.strftime("%d.%m.%Y")+'.pdf'
     path_file = 'downloads/'+name_file

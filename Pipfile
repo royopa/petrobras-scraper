@@ -16,6 +16,7 @@ xlsxwriter = "*"
 flask = "*"
 tablib = "*"
 pylint = "*"
+wget = "*"
 
 
 [requires]

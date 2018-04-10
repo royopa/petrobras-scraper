@@ -6,3 +6,4 @@ tqdm
 xlsxwriter
 tablib
 flask
+wget
