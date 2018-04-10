@@ -10,15 +10,15 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   git config --global user.name "Travis"
 
   #using token clone gh-pages branch
-  git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/royopa/petrobras-scraper.git  gh-pages > /dev/null
+  git clone --quiet --branch=master https://${GH_TOKEN}@github.com/royopa/petrobras-scraper.git  master > /dev/null
 
-  #go into diractory and copy data we're interested in to that directory
-  cd gh-pages
+  #go into directory and copy data we're interested in to that directory
+  cd master
   cp -Rf $HOME/bases/* .
 
   #add, commit and push files
   git add -f .
-  git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed to gh-pages"
+  git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed to master"
   git push -fq origin gh-pages > /dev/null
 
   echo -e "Done magic with coverage\n"
