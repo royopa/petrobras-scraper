@@ -30,7 +30,21 @@ def download_file(url, file_name):
     handle.close()
 
 
+def remove_old_files():
+    file_list = os.listdir(r"downloads")
+    for file_name in file_list:
+        if not file_name.startswith('precos_medios_diesel_e_gasolina_'):
+            continue
+        today = datetime.datetime.now().strftime('%d.%m.%Y')
+        data_arquivo = file_name.split('precos_medios_diesel_e_gasolina_')[-1][-20:][0:10]
+        print(data_arquivo)
+        if today != data_arquivo:
+            os.remove(os.path.join('downloads', file_name))
+
+
 if __name__ == '__main__':
+    remove_old_files()
+    exit()
     # verifica a última data disponível na base 
     name_file_base = 'precos_medios_diesel_e_gasolina_base.csv'
     path_file_base = 'bases/'+name_file_base
