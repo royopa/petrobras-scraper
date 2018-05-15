@@ -7,4 +7,4 @@ tqdm
 xlsxwriter
 tablib
 flask
-wget
+bizdays
