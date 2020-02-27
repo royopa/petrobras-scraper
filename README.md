@@ -17,7 +17,7 @@ O programa que faz o download e converte os dados baixados para CSV é o [downlo
 
 ### Relatório com preços médios
 
-A partir de 08/02/2018 a Petrobras passou a disponibilizar a informação de preços médios em reais, e não mais em percentual, através [deste relatório PDF](http://www.petrobras.com.br/lumis/api/rest/pricegraphnovo/report?n=4). Um trecho deste relatório pode ser visto abaixo:
+A partir de 08/02/2018 a Petrobras passou a disponibilizar a informação de preços médios em reais, e não mais em percentual, através [deste relatório PDF](http://www.petrobras.com.br/lumis/api/rest/pricegraphnovo/report?n=4). Este relatório não é mais atualizado e a última data disponível é o dia 19/04/2019. Um trecho deste relatório pode ser visto abaixo:
 
 ![relatorio_preco_medio_example.png](https://raw.githubusercontent.com/royopa/petrobras-scraper/master/images/relatorio_preco_medio_example.png)
 
