@@ -17,6 +17,7 @@ flask = "*"
 tablib = "*"
 pylint = "*"
 bizdays = "*"
+werkzeug = ">=0.15.3"
 
 
 [requires]
